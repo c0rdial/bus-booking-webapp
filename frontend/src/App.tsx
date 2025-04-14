@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Components
+import Home from './components/Home';
+import TrainInfo from './components/TrainInfo';
+import CoachSelection from './components/CoachSelection';
+import SeatSelection from './components/SeatSelection';
+import BookingSummary from './components/BookingSummary';
+import Payment from './components/Payment';
+import Confirmation from './components/Confirmation';
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+// Types
+export interface BookingDetails {
+  origin: string;
+  destination: string;
+  departureDate: string;
+  returnDate: string;
+  passengers: number;
+  trainNumber?: string;
+  coachNumber?: string;
+  seatNumber?: string;
+  departureTime?: string;
+  arrivalTime?: string;
+  totalAmount?: number;
 }
 
-export default App
+function App() {
+  const [bookingDetails, setBookingDetails] = useState<BookingDetails>({
+    origin: '',
+    destination: '',
+    departureDate: '',
+    returnDate: '',
+    passengers: 1,
+  });
+
+  return (
+    <div className="app-container">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home bookingDetails={bookingDetails} setBookingDetails={setBookingDetails} />} />
+          <Route path="/train-info" element={<TrainInfo bookingDetails={bookingDetails} setBookingDetails={setBookingDetails} />} />
+          <Route path="/coach-selection" element={<CoachSelection bookingDetails={bookingDetails} setBookingDetails={setBookingDetails} />} />
+          <Route path="/seat-selection" element={<SeatSelection bookingDetails={bookingDetails} setBookingDetails={setBookingDetails} />} />
+          <Route path="/booking-summary" element={<BookingSummary bookingDetails={bookingDetails} />} />
+          <Route path="/payment" element={<Payment bookingDetails={bookingDetails} />} />
+          <Route path="/confirmation" element={<Confirmation bookingDetails={bookingDetails} />} />
+        </Routes>
+      </Router>
+    </div>
+  );
+}
+
+export default App;
